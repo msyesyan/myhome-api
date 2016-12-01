@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover _mocha spec/* -- -R spec"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^3.11.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "restify": "^4.2.0"
   },

@@ -60,3 +60,5 @@ server.del('/things/:id', (req, res) => {
     }
   });
 });
+
+module.exports = server;

@@ -8,51 +8,51 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
 var DBClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID
+var ObjectID = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/myhome';
 var db;
-DBClient.connect(url, function(err, database) {
+DBClient.connect(url, (err, database) => {
   if (err) {
     console.log('failed to connect db, error: ', err);
   } else {
     db = database;
   }
-  server.listen(3000, function() {
+  server.listen(3000, () => {
     console.log('server startup, listeninng ', 3000);
-  })
+  });
 });
 
-server.get('/', function(req, res, next) {
-  res.send(200, { message: 'welcome' })
+server.get('/', (req, res) => {
+  res.send(200, { message: 'welcome' });
 });
 
-server.post('/things', function(req, res, next) {
-  db.collection('things').save(req.body, function(err, result) {
+server.post('/things', (req, res) => {
+  db.collection('things').save(req.body, (err, result) => {
     res.send(202, result);
   });
 });
 
-server.get('/things', function(req, res, next) {
-  db.collection('things').find().toArray(function(err, things) {
-    res.send(200, { things: things })
+server.get('/things', (req, res) => {
+  db.collection('things').find().toArray((err, things) => {
+    res.send(200, { things: things });
   });
 });
 
-server.put('/things/:id', function(req, res, next) {
+server.put('/things/:id', (req) => {
   db.collection('things').updateOne({_id: ObjectID(req.params.id)}, {
     $set: req.body
-  }, function(err, writeResult) {
+  }, (err) => {
     if (err) {
       console.log('update fail', err.errmsg);
     } else {
-      console.log('update success')
+      console.log('update success');
     }
   });
 });
 
-server.del('/things/:id', function(req, res, next) {
+server.del('/things/:id', (req, res) => {
   db.collection('things').remove({ _id: ObjectID(req.params.id) }, { justOne: true}, function(err, response) {
-    console.log(response.result.ok, response.result.n)
+    console.log(response.result.ok, response.result.n);
     if (response.result.n) {
       res.send(200, { message: 'del success' });
     } else {

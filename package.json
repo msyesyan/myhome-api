@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nf start",
     "test": "istanbul cover _mocha spec/* -- -R spec"
   },
   "author": "",
@@ -19,6 +19,7 @@
     "restify": "^4.2.0"
   },
   "dependencies": {
+    "foreman": "^2.0.0",
     "lodash": "^4.17.2",
     "mongodb": "^2.2.11",
     "mongoose": "^4.7.1"

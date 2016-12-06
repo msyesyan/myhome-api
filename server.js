@@ -30,16 +30,4 @@ server.post('/things', BooksController.create);
 server.put('/things/:id', BooksController.update);
 server.del('/things/:id', BooksController.destroy);
 
-
-// server.del('/things/:id', (req, res) => {
-//   db.collection('things').remove({ _id: ObjectID(req.params.id) }, { justOne: true}, function(err, response) {
-//     console.log(response.result.ok, response.result.n);
-//     if (response.result.n) {
-//       res.send(200, { message: 'del success' });
-//     } else {
-//       res.send(400, { message: 'del fail' });
-//     }
-//   });
-// });
-//
 module.exports = server;

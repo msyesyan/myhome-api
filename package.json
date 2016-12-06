@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
+    "start": "cat .env && nodemon server.js",
     "test": "istanbul cover _mocha spec/* -- -R spec"
   },
   "author": "",
@@ -16,6 +17,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
+    "pryjs": "^1.0.3",
     "restify": "^4.2.0"
   },
   "dependencies": {

@@ -1,5 +1,4 @@
 const Thing = require('../models/thing');
-// const pry = require('pryjs');
 
 module.exports = {
   index: (req, res) => {

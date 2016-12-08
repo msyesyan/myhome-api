@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nf start",
     "start": "cat .env && nodemon server.js",
-    "test": "istanbul cover _mocha spec/* -- -R spec"
+    "test": "NODE_ENV=test istanbul cover _mocha spec/* -- -R spec"
   },
   "author": "",
   "license": "ISC",

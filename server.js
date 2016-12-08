@@ -14,6 +14,7 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const dbConfig = require(path.resolve('./config/database.js'));
 mongoose.connect(dbConfig[ENV].url);
 

@@ -1,0 +1,3 @@
+--no-timeouts
+--reporter spec
+--bail

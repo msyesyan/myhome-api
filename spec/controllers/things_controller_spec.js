@@ -1,34 +1,58 @@
 const path = require('path');
 const chai = require('chai');
-const expect = chai.expect;
-// const should = chai.should();
 const chaiHttp = require('chai-http');
-chai.use(chaiHttp);
 const Thing = require(path.resolve('./models/thing.js'));
 const server = require(path.resolve('./server.js'));
+const DatabaseCleaner = require('database-cleaner');
+const databaseCleaner = new DatabaseCleaner('mongodb');
+const database = Thing.db.db;
+
+chai.use(chaiHttp);
+const request = chai.request;
+const expect = chai.expect;
+
+const cleanDB = (callback) => {
+  databaseCleaner.clean(database, callback);
+};
+
+const after = (func) => {
+  return cleanDB(func);
+};
 
 const buildThing = () => {
   return new Thing({name: 'thing'});
 };
 
-describe('Things', () => {
+const thingUrl = (thing) => {
+  return `/things/${thing.id}`;
+};
+
+describe('ThingsController', () => {
   describe('POST thing', () => {
     it('should create thing', (done) => {
-      chai.request(server).
-        post('/things').
-        send({name: 'thing'}).
-        end((err, res) => {
-          expect(res).to.have.status('201');
-          done();
-        });
+      request(server).post('/things').send({
+        thing: {
+          name: 'thing'
+        }
+      }).end((err, res) => {
+        expect(res).to.have.status('201');
+        expect(res.body.name).to.eq('thing');
+        expect(res.body).to.have.property('_id');
+        after(done);
+      });
     });
   });
 
   describe('GET things', () => {
     it('should GET all things', (done) => {
-      chai.request(server).get('/things').end((err, res) => {
-        expect(res).to.have.status(200);
-        done();
+      buildThing().save((err, thing) => {
+        request(server).get('/things').end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('array');
+          expect(res.body.length).to.eq(1);
+          expect(res.body[0].name).to.eq(thing.name);
+          after(done);
+        });
       });
     });
   });
@@ -37,11 +61,11 @@ describe('Things', () => {
   describe('PUT thing', () => {
     it('should Update thing', (done) => {
       buildThing().save((err, thing) => {
-        chai.request(server).put(`/things/${thing.id}`, {
+        request(server).put(thingUrl(thing)).send({
           name: 'thingModify'
         }).end((err, res) => {
           expect(res).to.have.status(200);
-          done();
+          after(done);
         });
       });
     });
@@ -50,9 +74,9 @@ describe('Things', () => {
   describe('DEL thing', () => {
     it('should DEL thing', (done) => {
       buildThing().save((err, thing) => {
-        chai.request(server).del(`/things/${thing.id}`).end((err, res) => {
+        request(server).del(thingUrl(thing)).end((err, res) => {
           expect(res).to.have.status(200);
-          done();
+          after(done);
         });
       });
     });

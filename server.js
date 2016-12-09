@@ -1,10 +1,9 @@
 const ENV = process.env.NODE_ENV;
 
 const path = require('path');
-const _ = require('lodash');
 const restify = require('restify');
 
-const configuration = _.extend(
+const configuration = Object.assign(
   require(path.resolve('./config/application.js')),
   require(path.resolve(`./config/${ENV}.js`))
 );

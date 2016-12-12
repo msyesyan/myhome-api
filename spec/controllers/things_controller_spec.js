@@ -11,13 +11,9 @@ chai.use(chaiHttp);
 const request = chai.request;
 const expect = chai.expect;
 
-const cleanDB = (callback) => {
-  databaseCleaner.clean(database, callback);
-};
-
-const after = (func) => {
-  return cleanDB(func);
-};
+const compose = (...funcs) => (...args) => funcs.reduceRight((result, func) => [func(...result)], args)[0];
+const cleanDB = (callback) => databaseCleaner.clean(database, callback);
+const after = (...callbacks) => compose(...[cleanDB].concat(callbacks))();
 
 const buildThing = () => {
   return new Thing({name: 'thing'});
@@ -38,7 +34,7 @@ describe('ThingsController', () => {
         expect(res).to.have.status('201');
         expect(res.body.name).to.eq('thing');
         expect(res.body).to.have.property('_id');
-        after(done);
+        after(() => done);
       });
     });
   });
@@ -51,7 +47,7 @@ describe('ThingsController', () => {
           expect(res.body).to.be.a('array');
           expect(res.body.length).to.eq(1);
           expect(res.body[0].name).to.eq(thing.name);
-          after(done);
+          after(() => done);
         });
       });
     });
@@ -65,7 +61,7 @@ describe('ThingsController', () => {
           name: 'thingModify'
         }).end((err, res) => {
           expect(res).to.have.status(200);
-          after(done);
+          after(() => done);
         });
       });
     });
@@ -76,7 +72,7 @@ describe('ThingsController', () => {
       buildThing().save((err, thing) => {
         request(server).del(thingUrl(thing)).end((err, res) => {
           expect(res).to.have.status(200);
-          after(done);
+          after(() => done);
         });
       });
     });

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "cat .env && nodemon server.js",
+    "start": "NODE_ENV=development nodemon server.js",
     "test": "NODE_ENV=test istanbul cover _mocha spec/* -- --opts ./mocha.opts"
   },
   "author": "",
